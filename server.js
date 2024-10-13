@@ -91,25 +91,25 @@ const verifyToken = (request, response, next) => {
 };
 
 // Rota GET para retornar todos os produtos
-app.get("/api/produtos",verifyToken, function(request, response) {
+app.get("/api/pessoas",verifyToken, function(request, response) {
   //response.json(produtos);
-  db.all("SELECT * FROM produtos", (error, linhas) => {
+  db.all("SELECT * FROM pessoas", (error, linhas) => {
     response.setHeader('content-type', 'text/json');
     return response.send(JSON.stringify(linhas));
   })
 });
 
 //ROTA GET para retornar um único produto, passando o ID do mesmo na URL
-app.get("/api/produtos/:id",verifyToken , function(request, response) {
-  const produto_id = parseInt(request.params.id)
+app.get("/api/pessoas/:id",verifyToken , function(request, response) {
+  const pessoa_id = parseInt(request.params.id)
   const sql = "SELECT id, nome, preco, estoque FROM produtos WHERE id = ?";
-  db.get(sql, [produto_id], function(error, linha) {
+  db.get(sql, [pessoa_id], function(error, linha) {
     if (error) {
-      return response.status(500).send(error);      
+      return response.status(500).send(error);    
     } else {
       console.log(linha);
       if (!linha) {
-        return response.status(404).send("Produto não encontrado"); 
+        return response.status(404).send("Pessoa não encontrada"); 
       } else {
         response.setHeader('content-type', 'application/json');
         return response.send(JSON.stringify(linha));
@@ -126,11 +126,9 @@ app.get("/api/produtos/:id",verifyToken , function(request, response) {
   }*/
 });
   
-//Rota POST para criar um produto...
-app.post("/api/produtos", verifyToken, function(request, response) {
-  if (request.usertipo != 'admin'){
-    return response.status(500).send({error: "Você não tem privilégios para cadastrar produto."});
-  }
+//Rota POST para criar uma pessoa...
+app.post("/api/produtos", function(request, response) {
+ 
   
 
   db.run("INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?) ", request.body.nome, request.body.preco, request.body.estoque, function(error){
