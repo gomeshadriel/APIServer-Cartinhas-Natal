@@ -135,7 +135,7 @@ app.post("/api/pessoas", function(request, response) {
   if(error) {
     return response.status(500).send(error);
     } else {
-      return response.status(201).json({ id: this.lastID, nome: request.body.nome, preco: request.body.cpf, estoque: request.body.estoque});
+      return response.status(201).json({ id: this.lastID, nome: request.body.nome, cpf: request.body.cpf, telefone: request.body.telefone, email: request.body.email});
     }
   })
 });
