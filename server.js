@@ -9,17 +9,10 @@ const exists = fs.existsSync(dbFile);
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database(dbFile);
 
-//0.3.0: Chamando jwt, bcryptjs e body-parser
-const jwt = require("jsonwebtoken");
-const bcryptjs = require("bcryptjs");
-const bodyParser = require("body-parser");
-
-
-
 //Se o banco não existir, crie ele primeiro
 db.serialize(() => {
   if (!exists) { // (exists == false)
-    db.run("CREATE TABLE pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, cpf INTEGER NOT NULL, telefone INTEGER NOT NULL DEFAULT 0, email TEXT NOT NULL)")
+    db.run("CREATE TABLE pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, cpf INTEGER NOT NULL, telefone INTEGER NOT NULL, email TEXT NOT NULL)")
     console.log("Tabela PESSOAS criada!");
   }
   else
@@ -42,53 +35,6 @@ app.get("/criarUsuarios", function(request, response) {
   db.run("INSERT INTO usuarios (username, password, tipo) VALUES ('admin', 'admin123', 'admin')");
   return response.status(200).send();
 });
-
-//Função para gerar token JWT
-const generateToken = (user) => {
-  return jwt.sign({id: user.id, username: user.username, tipo:user.tipo}, 'seuSegredoJWT', { expiresIn: '1h'});
-};
-
-//Rota para login de usuário
-app.post('/api/login', (request, response) => {
-  const { username, password } = request.body;
-  
-//Busca o usuário no banco de dados
-db.get('SELECT id, username, password, tipo FROM usuarios WHERE username = ?', [username], (err, user) => {
-    if (err) {
-      return response.status(500).json({ error: 'Erro no banco de dados.' });
-    }
-    if (!user) {
-      return response.status(404).json({ error: 'Usuário não encontrado.' });
-    }
-    
-    console.log(password+' '+user.password);
-    //aqui vai entrar criptografia depois..
-    if (password == user.password) {
-      const token = generateToken(user);
-      return response.json({message: "Login bem-sucedido!", token});
-    } else {
-      return response.status(401).json({error: "Senha inválida."});
-    }
-  });
-});
-//Verificar token!!
-const verifyToken = (request, response, next) => {
-  const token = request.headers['x-access-token'];
-  if(!token) { //undefined
-    return response.status(403).json({error: "Nenhum token foi fornecido."});
-  }
-  
-  jwt.verify(token, 'seuSegredoJWT', (error, decoded) => {
-    if(error) {
-      return response.status(500).json({error: "Falha ao autenticar o token."});
-    }
-    
-    request.userid = decoded.id;
-    request.usertipo = decoded.tipo;
-    next();  
-  });
-  
-};
 
 // Rota GET para retornar todos os produtos
 app.get("/api/pessoas", function(request, response) {
