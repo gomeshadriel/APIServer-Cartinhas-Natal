@@ -88,7 +88,7 @@ app.patch("/api/pessoas/:id", function(request, response) {
   
   
   
-  //Passando TUDO, nome, preço, estoque.....
+  //Passando TUDO, nome, cpf, telefone e email.....
   let set = "";
   let valores = [];
   
@@ -142,7 +142,7 @@ app.patch("/api/pessoas/:id", function(request, response) {
   });
 });
 
-//APAGAR PRODUTO CORRIGIDO
+//APAGAR PESSOA CORRIGIDO
 
 app.delete("/api/pessoas/:id", function(request, response) {
  
