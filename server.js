@@ -131,11 +131,11 @@ app.post("/api/pessoas", function(request, response) {
  
   
 
-  db.run("INSERT INTO pessoas (nome, cpf, estoque) VALUES (?, ?, ?) ", request.body.nome, request.body.preco, request.body.estoque, function(error){
+  db.run("INSERT INTO pessoas (nome, cpf, telefone, email) VALUES (?, ?, ?, ?) ", request.body.nome, request.body.cpf, request.body.telefone, request.body.email, function(error){
   if(error) {
     return response.status(500).send(error);
     } else {
-      return response.status(201).json({ id: this.lastID, nome: request.body.nome, preco: request.body.preco, estoque: request.body.estoque});
+      return response.status(201).json({ id: this.lastID, nome: request.body.nome, preco: request.body.cpf, estoque: request.body.estoque});
     }
   })
 });
