@@ -140,17 +140,13 @@ app.post("/api/pessoas", function(request, response) {
   })
 });
 
-app.patch("/api/produtos", function(request, response) {
+app.patch("/api/pessoas", function(request, response) {
   return response.status(500).send("Erro interno do servidor!");
 });
 
 // ATUALIZAR PRODUTO...
-app.patch("/api/produtos/:id", verifyToken, function(request, response) {
-  if (request.usertipo != 'admin'){
-    return response.status(500).send({error: "Você não tem privilégios para cadastrar produto."});
-  }
-  
-  const produto_id = parseInt(request.params.id);
+app.patch("/api/pessoas/:id", function(request, response) {
+  const pessoa_id = parseInt(request.params.id);
   
   
   
@@ -164,26 +160,35 @@ app.patch("/api/produtos/:id", verifyToken, function(request, response) {
     valores.push(request.body.nome);
   }
   
-  //Se vai ter preco
-  if(request.body.preco != undefined){
+  //Se vai ter CPF
+  if(request.body.cpf != undefined){
     if(set.length > 0) {
       set += ",";
       }
-      set += "preco=?";
-      valores.push(request.body.preco);
+      set += "cpf=?";
+      valores.push(request.body.cpf);
     }
   
-  //Se vai ter estoque
-  if(request.body.estoque != undefined){
+  //Se vai ter telefone
+  if(request.body.telefone != undefined){
     if(set.length > 0) {
       set += ",";
       }
-      set += "estoque=?";
-      valores.push(request.body.estoque);
+      set += "telefone=?";
+      valores.push(request.body.telefone);
     }
   
-  const sql = "UPDATE produtos SET " +set+ "WHERE id=?";
-  valores.push(produto_id);
+  //Se vai ter email
+  if(request.body.email != undefined){
+    if(set.length > 0) {
+      set += ",";
+      }
+      set += "email=?";
+      valores.push(request.body.email);
+    }
+  
+  const sql = "UPDATE pessoas SET " +set+ "WHERE id=?";
+  valores.push(pessoa_id);
   console.log(sql);
   
   db.run(sql, valores, function(error) {
