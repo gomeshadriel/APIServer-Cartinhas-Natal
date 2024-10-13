@@ -19,7 +19,7 @@ const bodyParser = require("body-parser");
 //Se o banco não existir, crie ele primeiro
 db.serialize(() => {
   if (!exists) { // (exists == false)
-    db.run("CREATE TABLE produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, preco REAL NOT NULL, estoque INTEGER NOT NULL DEFAULT 0)")
+    db.run("CREATE TABLE produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, cpf INTEGER NOT NULL, telefone INTEGER NOT NULL DEFAULT 0, email TEXT NOT NULL)")
     console.log("Tabela PRODUTOS criada!");
   }
   else
