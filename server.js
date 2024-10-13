@@ -196,7 +196,7 @@ app.patch("/api/pessoas/:id", function(request, response) {
       return response.status(500).send("Erro interno do servidor.");
     } else {
       if (this.changes === 0) {
-        return response.status(404).send("Produto não encontrado.");
+        return response.status(404).send("Pessoa não encontrada.");
       } else {
         return response.status(200).send();
       }
@@ -206,21 +206,17 @@ app.patch("/api/pessoas/:id", function(request, response) {
 
 //APAGAR PRODUTO CORRIGIDO
 
-app.delete("/api/produtos/:id",verifyToken, function(request, response) {
-  if (request.usertipo != 'admin'){
-    return response.status(500).send({error: "Você não tem privilégios para cadastrar produto."});
-  }
+app.delete("/api/pessoas/:id", function(request, response) {
+ 
+  const pessoa_id = parseInt(request.params.id);
   
-  
-  const produto_id = parseInt(request.params.id);
-  
-  const sql = "DELETE FROM produtos WHERE id=?";
-  db.run(sql, produto_id, function(error) {
+  const sql = "DELETE FROM pessoas WHERE id=?";
+  db.run(sql, pessoa_id, function(error) {
     if(error) {
       return response.status(500).send("Erro no servidor");
     } else {
       if (this.changes === 0) {
-          return response.status(404).send("Produto não encontrado.");
+          return response.status(404).send("Pessoa não encontrada.");
       } else {
         return response.status(204).send();
       }
