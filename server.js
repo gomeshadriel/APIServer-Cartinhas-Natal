@@ -91,8 +91,8 @@ const verifyToken = (request, response, next) => {
 };
 
 // Rota GET para retornar todos os produtos
-app.get("/api/pessoas",verifyToken, function(request, response) {
-  //response.json(produtos);
+app.get("/api/pessoas", function(request, response) {
+  //response.json(pessoas);
   db.all("SELECT * FROM pessoas", (error, linhas) => {
     response.setHeader('content-type', 'text/json');
     return response.send(JSON.stringify(linhas));
@@ -100,9 +100,9 @@ app.get("/api/pessoas",verifyToken, function(request, response) {
 });
 
 //ROTA GET para retornar um único produto, passando o ID do mesmo na URL
-app.get("/api/pessoas/:id",verifyToken , function(request, response) {
+app.get("/api/pessoas/:id", function(request, response) {
   const pessoa_id = parseInt(request.params.id)
-  const sql = "SELECT id, nome, preco, estoque FROM produtos WHERE id = ?";
+  const sql = "SELECT id, nome, cpf, telefone, email FROM pessoas WHERE id = ?";
   db.get(sql, [pessoa_id], function(error, linha) {
     if (error) {
       return response.status(500).send(error);    
@@ -127,11 +127,11 @@ app.get("/api/pessoas/:id",verifyToken , function(request, response) {
 });
   
 //Rota POST para criar uma pessoa...
-app.post("/api/produtos", function(request, response) {
+app.post("/api/pessoas", function(request, response) {
  
   
 
-  db.run("INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?) ", request.body.nome, request.body.preco, request.body.estoque, function(error){
+  db.run("INSERT INTO pessoas (nome, cpf, estoque) VALUES (?, ?, ?) ", request.body.nome, request.body.preco, request.body.estoque, function(error){
   if(error) {
     return response.status(500).send(error);
     } else {
