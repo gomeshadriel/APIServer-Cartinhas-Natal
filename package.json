@@ -1,5 +1,5 @@
 {
-  "name": "meu-api-trabalho-a3",
+  "name": "meu-api-trabalho",
   "version": "0.1.0",
   "description": "Um exemplo simples de servidor API para o nossso trabalho da A3.",
   "main": "server.js",
