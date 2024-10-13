@@ -4,7 +4,7 @@ const app = express();
 const fs = require("fs");
 
 //Inicialização do banco de dados SQLite
-const dbFile = "./.data/produtos3.db";
+const dbFile = "./.data/pessoas.db";
 const exists = fs.existsSync(dbFile);
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database(dbFile);
