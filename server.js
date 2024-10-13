@@ -28,14 +28,6 @@ app.get("/", function(request, response) {
 //se nao colocar isso aqui o post não funciona
 app.use(express.json());
 
-//Serviço para criar tabela de usuários e 2 usuários
-app.get("/criarUsuarios", function(request, response) {
-  db.run("CREATE TABLE IF NOT EXISTS usuarios (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL, tipo TEXT NOT NULL, UNIQUE(username))");
-  db.run("INSERT INTO usuarios (username, password, tipo) VALUES ('fulano', '12345', 'user')");
-  db.run("INSERT INTO usuarios (username, password, tipo) VALUES ('admin', 'admin123', 'admin')");
-  return response.status(200).send();
-});
-
 // Rota GET para retornar todos os produtos
 app.get("/api/pessoas", function(request, response) {
   //response.json(pessoas);
