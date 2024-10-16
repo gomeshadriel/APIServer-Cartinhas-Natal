@@ -25,7 +25,6 @@ db.serialize(() => {
       console.log("Tabela PESSOAS verificada/criada.");
     }
   });
-
   // Cria a tabela "criancas" se não existir
   db.run(`CREATE TABLE IF NOT EXISTS criancas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
