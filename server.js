@@ -44,6 +44,7 @@ app.get("/api/pessoas", function(request, response) {
   })
 });
 
+
 //ROTA GET para retornar um único produto, passando o ID do mesmo na URL
 app.get("/api/pessoas/:id", function(request, response) {
   const pessoa_id = parseInt(request.params.id)
@@ -178,15 +179,27 @@ app.get("/api/criancas", function(request, response) {
     return response.send(JSON.stringify(linhas));
   })
 });
-//ROTA POST PARA CADASTRAR CRIANÇA
-db.run("INSERT INTO pessoas (nome, escola, cartinha, imagem) VALUES (?, ?, ?, ?) ", request.body.nome, request.body.escola, request.body.cartinha, request.body.imagem, function(error){
+//Rota POST para cadastrar uma criança...
+app.post("/api/criancas", function(request, response) {
+ 
+  
+
+  db.run("INSERT INTO pessoas (nome, escola, cartinha, imagem) VALUES (?, ?, ?, ?) ", request.body.nome, request.body.escola, request.body.cartinha, request.body.imagem, function(error){
   if(error) {
     return response.status(500).send(error);
     } else {
       return response.status(201).json({ id: this.lastID, nome: request.body.nome, escola: request.body.escola, cartinha: request.body.cartinha, imagem: request.body.imagem});
     }
-  });
+  })
 });
+
+app.patch("/api/criancas", function(request, response) {
+  return response.status(500).send("Erro interno do servidor!");
+});
+
+
+
+
 
 
 
