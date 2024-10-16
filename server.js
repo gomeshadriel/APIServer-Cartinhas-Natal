@@ -12,12 +12,29 @@ const db = new sqlite3.Database(dbFile);
 //Se o banco não existir, crie ele primeiro
 db.serialize(() => {
   if (!exists) { // (exists == false)
-    db.run("CREATE TABLE pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, cpf INTEGER NOT NULL, telefone INTEGER NOT NULL, email TEXT NOT NULL)")
+    // Criar tabela pessoas
+    db.run(`CREATE TABLE pessoas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, 
+      nome TEXT NOT NULL, 
+      cpf INTEGER NOT NULL, 
+      telefone INTEGER NOT NULL, 
+      email TEXT NOT NULL
+    )`);
     console.log("Tabela PESSOAS criada!");
-  }
-  else
-  {
-    console.log("Tabela PESSOAS já existe e funciona bem!");
+    
+    // Criar tabela crianças com uma FK para pessoas
+    db.run(`CREATE TABLE criancas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, 
+      nome TEXT NOT NULL, 
+      escola TEXT NOT NULL,
+      cartinha TEXT NOT NULL,
+      imagem TEXT NOT NULL,
+      pessoa_id INTEGER NOT NULL, 
+      FOREIGN KEY (pessoa_id) REFERENCES pessoas(id)
+    )`);
+    console.log("Tabela CRIANCAS criada!");
+  } else {
+    console.log("Tabelas já existem e funcionam bem!");
   }
 });
 
@@ -161,6 +178,30 @@ app.delete("/api/pessoas/:id", function(request, response) {
     }
   });
 });
+//ROTA GET PARA RETORNAR AS CRIANÇAS
+app.get("/api/criancas", function(request, response) {
+  //response.json(pessoas);
+  db.all("SELECT * FROM criancas", (error, linhas) => {
+    response.setHeader('content-type', 'text/json');
+    return response.send(JSON.stringify(linhas));
+  })
+});
+//ROTA POST PARA CADASTRAR NOVAS CRIANÇAS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*   FIM DO MEU API SERVER      */
 
 
