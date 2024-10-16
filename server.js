@@ -43,7 +43,6 @@ db.serialize(() => {
     }
   });
 });
-
 //Vamos tratar quando o visitante acessar o "/" (página principal)
 app.get("/", function(request, response) {
   response.sendFile(__dirname + "/index.html");
@@ -77,14 +76,6 @@ app.get("/api/pessoas/:id", function(request, response) {
       }
     }
   });
-  /*
-  const produto = produtos.find(i => i.id === produto_id);
-  
-  if (!produto) { // produto == false
-    return response.status(404).send("Produto não encontrado");
-  } else {
-    return response.json(produto);
-  }*/
 });
   
 //Rota POST para cadastrar uma pessoa...
@@ -209,8 +200,25 @@ app.post("/api/criancas", function(request, response) {
 app.patch("/api/criancas", function(request, response) {
   return response.status(500).send("Erro interno do servidor!");
 });
-
-
+//ROTA GET PARA RETORNAR UMA ÚNICA CRIANÇA, PASSANDO O ID DO MESMO NA URL
+app.get("/api/criancas/:id", function(request, response) {
+  const crianca_id = parseInt(request.params.id)
+  const sql = "SELECT id, nome, escola, cartinha, imagem, pessoa_id FROM pessoas WHERE id = ?";
+  db.get(sql, [crianca_id], function(error, linha) {
+    if (error) {
+      return response.status(500).send(error);    
+    } else {
+      console.log(linha);
+      if (!linha) {
+        return response.status(404).send("Criança não encontrada"); 
+      } else {
+        response.setHeader('content-type', 'application/json');
+        return response.send(JSON.stringify(linha));
+      }
+    }
+  });
+});
+//
 
 
 
