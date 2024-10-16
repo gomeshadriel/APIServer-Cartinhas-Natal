@@ -22,7 +22,7 @@ db.serialize(() => {
     )`);
     console.log("Tabela PESSOAS criada!");
     
-    // Criar tabela crianças com uma FK para pessoas
+    // Criando uma tabela crianças com uma chave estrangeira para pessoas
     db.run(`CREATE TABLE criancas (
       id INTEGER PRIMARY KEY AUTOINCREMENT, 
       nome TEXT NOT NULL, 
@@ -179,7 +179,7 @@ app.delete("/api/pessoas/:id", function(request, response) {
   });
 });
 //ROTA GET PARA RETORNAR AS CRIANÇAS
-app.get("/api/criancas", function(request, response) {
+app.get("/criancas", function(request, response) {
   //response.json(pessoas);
   db.all("SELECT * FROM criancas", (error, linhas) => {
     response.setHeader('content-type', 'text/json');
@@ -187,7 +187,22 @@ app.get("/api/criancas", function(request, response) {
   })
 });
 //ROTA POST PARA CADASTRAR NOVAS CRIANÇAS
+app.post("/criancas", function(request, response) {
+ 
+  
 
+  db.run("INSERT INTO criancas (nome, escola, cartinha, imagem, pessoa_id) VALUES (?, ?, ?, ?, ?) ", request.body.nome, request.body.escola, request.body.cartinha, request.body.imagem, request.body.pessoa_id, function(error){
+  if(error) {
+    return response.status(500).send(error);
+    } else {
+      return response.status(201).json({ id: this.lastID, nome: request.body.nome, escola: request.body.escola, cartinha: request.body.cartinha, imagem: request.body.imagem, pessoa_id: request.body.pessoa_id});
+    }
+  })
+});
+
+app.patch("/criancas", function(request, response) {
+  return response.status(500).send("Erro interno do servidor!");
+});
 
 
 
