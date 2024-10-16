@@ -11,31 +11,37 @@ const db = new sqlite3.Database(dbFile);
 
 //Se o banco não existir, crie ele primeiro
 db.serialize(() => {
-  if (!exists) { // (exists == false)
-    // Criar tabela pessoas
-    db.run(`CREATE TABLE pessoas (
-      id INTEGER PRIMARY KEY AUTOINCREMENT, 
-      nome TEXT NOT NULL, 
-      cpf INTEGER NOT NULL, 
-      telefone INTEGER NOT NULL, 
-      email TEXT NOT NULL
-    )`);
-    console.log("Tabela PESSOAS criada!");
-    
-    // Criando uma tabela crianças com uma chave estrangeira para pessoas
-    db.run(`CREATE TABLE criancas (
-      id INTEGER PRIMARY KEY AUTOINCREMENT, 
-      nome TEXT NOT NULL, 
-      escola TEXT NOT NULL,
-      cartinha TEXT NOT NULL,
-      imagem TEXT NOT NULL,
-      pessoa_id INTEGER NOT NULL, 
-      FOREIGN KEY (pessoa_id) REFERENCES pessoas(id)
-    )`);
-    console.log("Tabela CRIANCAS criada!");
-  } else {
-    console.log("Tabelas já existem e funcionam bem!");
-  }
+  // Cria a tabela "pessoas" se não existir
+  db.run(`CREATE TABLE IF NOT EXISTS pessoas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    cpf INTEGER NOT NULL,
+    telefone INTEGER NOT NULL,
+    email TEXT NOT NULL
+  )`, (err) => {
+    if (err) {
+      console.log("Erro ao criar a tabela pessoas:", err);
+    } else {
+      console.log("Tabela PESSOAS verificada/criada.");
+    }
+  });
+
+  // Cria a tabela "criancas" se não existir
+  db.run(`CREATE TABLE IF NOT EXISTS criancas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    escola TEXT NOT NULL,
+    cartinha TEXT NOT NULL,
+    imagem TEXT NOT NULL,
+    pessoa_id INTEGER NOT NULL,
+    FOREIGN KEY (pessoa_id) REFERENCES pessoas(id)
+  )`, (err) => {
+    if (err) {
+      console.log("Erro ao criar a tabela criancas:", err);
+    } else {
+      console.log("Tabela CRIANCAS verificada/criada.");
+    }
+  });
 });
 
 //Vamos tratar quando o visitante acessar o "/" (página principal)
@@ -179,7 +185,7 @@ app.delete("/api/pessoas/:id", function(request, response) {
   });
 });
 //ROTA GET PARA RETORNAR AS CRIANÇAS
-app.get("/criancas", function(request, response) {
+app.get("/api/criancas", function(request, response) {
   //response.json(pessoas);
   db.all("SELECT * FROM criancas", (error, linhas) => {
     response.setHeader('content-type', 'text/json');
@@ -187,7 +193,7 @@ app.get("/criancas", function(request, response) {
   })
 });
 //ROTA POST PARA CADASTRAR NOVAS CRIANÇAS
-app.post("/criancas", function(request, response) {
+app.post("/api/criancas", function(request, response) {
  
   
 
@@ -200,7 +206,7 @@ app.post("/criancas", function(request, response) {
   })
 });
 
-app.patch("/criancas", function(request, response) {
+app.patch("/api/criancas", function(request, response) {
   return response.status(500).send("Erro interno do servidor!");
 });
 
