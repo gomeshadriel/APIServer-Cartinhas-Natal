@@ -218,18 +218,83 @@ app.get("/api/criancas/:id", function(request, response) {
     }
   });
 });
-//
-
-
-
-
-
-
-
-
-
-
-
+//ATUALIZAR OS DADOS DA CRIANÇA
+app.patch("/api/crianca/:id", function(request, response) {
+  const crianca_id = parseInt(request.params.id);
+  
+  
+  
+  //Passando TUDO, nome, escola, cartinha, imagem e pessoa_id.....
+  let set = "";
+  let valores = [];
+  
+  //Se vai ter nome
+  if(request.body.nome != undefined){
+    set = "nome=?";
+    valores.push(request.body.nome);
+  }
+  
+  //Se vai ter escola
+  if(request.body.escola != undefined){
+    if(set.length > 0) {
+      set += ",";
+      }
+      set += "escola=?";
+      valores.push(request.body.escola);
+    }
+  
+  //Se vai ter cartinha
+  if(request.body.cartinha != undefined){
+    if(set.length > 0) {
+      set += ",";
+      }
+      set += "cartinha=?";
+      valores.push(request.body.cartinha);
+    }
+  
+  //Se vai ter imagem
+  if(request.body.imagem != undefined){
+    if(set.length > 0) {
+      set += ",";
+      }
+      set += "imagem=?";
+      valores.push(request.body.imagem);
+    }
+ 
+  const sql = "UPDATE criancas SET " +set+ "WHERE id=?";
+  valores.push(crianca_id);
+  console.log(sql);
+  
+  db.run(sql, valores, function(error) {
+    if (error) {
+      return response.status(500).send("Erro interno do servidor.");
+    } else {
+      if (this.changes === 0) {
+        return response.status(404).send("Pessoa não encontrada.");
+      } else {
+        return response.status(200).send();
+      }
+    }
+  });
+});
+//ROTA PARA APAGAR ALGUMA CRIANÇA DO BANCO
+app.delete("/api/criancas/:id", function(request, response) {
+ 
+  const crianca_id = parseInt(request.params.id);
+  
+  const sql = "DELETE FROM criancas WHERE id=?";
+  db.run(sql, crianca_id, function(error) {
+    if(error) {
+      return response.status(500).send("Erro no servidor");
+    } else {
+      if (this.changes === 0) {
+          return response.status(404).send("Criança não encontrada.");
+      } else {
+        return response.status(204).send();
+      }
+    }
+  });
+});
 
 /*   FIM DO MEU API SERVER      */
 
