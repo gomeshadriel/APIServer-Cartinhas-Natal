@@ -14,16 +14,9 @@ db.serialize(() => {
   if (!exists) { // (exists == false)
     db.run("CREATE TABLE pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, cpf INTEGER NOT NULL, telefone INTEGER NOT NULL, email TEXT NOT NULL)")
     console.log("Tabela PESSOAS criada!");
-
-    // Criando nova tabela para crianças
-    db.run("CREATE TABLE criancas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, escola TEXT NOT NULL, cartinha TEXT NOT NULL, imagem TEXT NOT NULL)", (err) => {
-      if (err) {
-        console.error("Erro ao criar tabela CRIANCAS:", err.message);
-      } else {
-        console.log("Tabela CRIANCAS criada!");
-      }
-    });
-  } else {
+  }
+  else
+  {
     console.log("Tabela PESSOAS já existe e funciona bem!");
   }
 });
@@ -35,7 +28,7 @@ app.get("/", function(request, response) {
 //se nao colocar isso aqui o post não funciona
 app.use(express.json());
 
-// Rota GET para retornar todos os produtos
+// Rota GET para retornar todos as pessoas
 app.get("/api/pessoas", function(request, response) {
   //response.json(pessoas);
   db.all("SELECT * FROM pessoas", (error, linhas) => {
@@ -44,8 +37,7 @@ app.get("/api/pessoas", function(request, response) {
   })
 });
 
-
-//ROTA GET para retornar um único produto, passando o ID do mesmo na URL
+//ROTA GET para retornar uma única pessoa, passando o ID do mesmo na URL
 app.get("/api/pessoas/:id", function(request, response) {
   const pessoa_id = parseInt(request.params.id)
   const sql = "SELECT id, nome, cpf, telefone, email FROM pessoas WHERE id = ?";
@@ -62,8 +54,6 @@ app.get("/api/pessoas/:id", function(request, response) {
       }
     }
   });
-  
-  
   /*
   const produto = produtos.find(i => i.id === produto_id);
   
@@ -74,7 +64,7 @@ app.get("/api/pessoas/:id", function(request, response) {
   }*/
 });
   
-//Rota POST para criar uma pessoa...
+//Rota POST para cadastrar uma pessoa...
 app.post("/api/pessoas", function(request, response) {
  
   
@@ -92,7 +82,7 @@ app.patch("/api/pessoas", function(request, response) {
   return response.status(500).send("Erro interno do servidor!");
 });
 
-// ATUALIZAR PRODUTO...
+// ATUALIZAR DADOS DA PESSOA...
 app.patch("/api/pessoas/:id", function(request, response) {
   const pessoa_id = parseInt(request.params.id);
   
@@ -171,39 +161,6 @@ app.delete("/api/pessoas/:id", function(request, response) {
     }
   });
 });
-
-//ROTA GET para retornar todas as criancas
-app.get("/api/criancas", function(request, response) {
-  db.all("SELECT * FROM criancas", (error,linhas)=> {
-    response.setHeader('content-type', 'text/json');
-    return response.send(JSON.stringify(linhas));
-  })
-});
-//Rota POST para cadastrar uma criança...
-app.post("/api/criancas", function(request, response) {
- 
-  
-
-  db.run("INSERT INTO pessoas (nome, escola, cartinha, imagem) VALUES (?, ?, ?, ?) ", request.body.nome, request.body.escola, request.body.cartinha, request.body.imagem, function(error){
-  if(error) {
-    return response.status(500).send(error);
-    } else {
-      return response.status(201).json({ id: this.lastID, nome: request.body.nome, escola: request.body.escola, cartinha: request.body.cartinha, imagem: request.body.imagem});
-    }
-  })
-});
-
-app.patch("/api/criancas", function(request, response) {
-  return response.status(500).send("Erro interno do servidor!");
-});
-
-
-
-
-
-
-
-
 /*   FIM DO MEU API SERVER      */
 
 
