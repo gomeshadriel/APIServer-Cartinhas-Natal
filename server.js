@@ -13,15 +13,16 @@ const db = new sqlite3.Database(dbFile);
 db.serialize(() => {
   if (!exists) { // (exists == false)
     db.run("CREATE TABLE pessoas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, cpf INTEGER NOT NULL, telefone INTEGER NOT NULL, email TEXT NOT NULL)")
-      if (err) {
-        console.error("Erro ao criar tabela PESSOAS:", err.message);
-      }else{
-         console.log("Tabela PESSOAS criada!");
-      }
-  //Criando nova tabela para crianças
-    db.run("CREATE TABLE criancas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, escola TEXT NOT NULL, cartinha TEXT NOT NULL, imagem TEXT NOT NULL)")
-    console.log("Tabela CRIANCAS criada!");
+    console.log("Tabela PESSOAS criada!");
   }
+  // Criando nova tabela para crianças
+    db.run("CREATE TABLE criancas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, escola TEXT NOT NULL, cartinha TEXT NOT NULL, imagem TEXT NOT NULL)", (err) => {
+      if (err) {
+        console.error("Erro ao criar tabela CRIANCAS:", err.message);
+      } else {
+        console.log("Tabela CRIANCAS criada!");
+      }
+    });
   else
   {
     console.log("Tabela PESSOAS já existe e funciona bem!");
@@ -35,7 +36,7 @@ app.get("/", function(request, response) {
 //se nao colocar isso aqui o post não funciona
 app.use(express.json());
 
-// Rota GET para retornar todas as pessoas e crianças
+// Rota GET para retornar todos os produtos
 app.get("/api/pessoas", function(request, response) {
   //response.json(pessoas);
   db.all("SELECT * FROM pessoas", (error, linhas) => {
@@ -44,7 +45,7 @@ app.get("/api/pessoas", function(request, response) {
   })
 });
 
-//ROTA GET para retornar uma única pessoa, passando o ID do mesmo na URL
+//ROTA GET para retornar um único produto, passando o ID do mesmo na URL
 app.get("/api/pessoas/:id", function(request, response) {
   const pessoa_id = parseInt(request.params.id)
   const sql = "SELECT id, nome, cpf, telefone, email FROM pessoas WHERE id = ?";
@@ -89,7 +90,7 @@ app.patch("/api/pessoas", function(request, response) {
   return response.status(500).send("Erro interno do servidor!");
 });
 
-// ATUALIZAR DADOS DA PESSOA...
+// ATUALIZAR PRODUTO...
 app.patch("/api/pessoas/:id", function(request, response) {
   const pessoa_id = parseInt(request.params.id);
   
