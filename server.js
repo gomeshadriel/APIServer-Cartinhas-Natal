@@ -342,8 +342,6 @@ app.get("/api/escolas/:id", function(request, response) {
 //ROTA POST PARA CADASTRAR UMA ESCOLA
 app.post("/api/escolas", function(request, response) {
  
-  
-
   db.run("INSERT INTO escolas (inep, nome, endereco, email) VALUES (?, ?, ?, ?) ", request.body.inep, request.body.nome, request.body.endereco, request.body.email, function(error){
   if(error) {
     return response.status(500).send(error);
@@ -436,8 +434,6 @@ app.delete("/api/escolas/:id", function(request, response) {
     }
   });
 });  
-
-
 
 /*   FIM DO MEU API SERVER      */
 
