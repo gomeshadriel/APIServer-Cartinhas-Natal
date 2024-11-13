@@ -358,6 +358,64 @@ app.patch("/api/escolas", function(request, response) {
 });
 
 //ATUALIZAR OS DADOS DA ESCOLA
+app.patch("/api/escola/:id", function(request, response) {
+  const escola_id = parseInt(request.params.id);
+  
+  
+  
+  //Passando TUDO, inep, nome, endereco, email.....
+  let set = "";
+  let valores = [];
+  
+  //Se vai ter inep
+  if(request.body.inep != undefined){
+    set = "inep=?";
+    valores.push(request.body.inep);
+  }
+  
+  //Se vai ter nome
+  if(request.body.nome != undefined){
+    if(set.length > 0) {
+      set += ",";
+      }
+      set += "nome=?";
+      valores.push(request.body.nome);
+    }
+  
+  //Se vai ter endereço
+  if(request.body.endereco != undefined){
+    if(set.length > 0) {
+      set += ",";
+      }
+      set += "endereco=?";
+      valores.push(request.body.endereco);
+    }
+  
+  //Se vai ter email
+  if(request.body.email != undefined){
+    if(set.length > 0) {
+      set += ",";
+      }
+      set += "email=?";
+      valores.push(request.body.email);
+    }
+ 
+  const sql = "UPDATE escolas SET " +set+ "WHERE id=?";
+  valores.push(escola_id);
+  console.log(sql);
+  
+  db.run(sql, valores, function(error) {
+    if (error) {
+      return response.status(500).send("Erro interno do servidor.");
+    } else {
+      if (this.changes === 0) {
+        return response.status(404).send("Escola não encontrada.");
+      } else {
+        return response.status(200).send();
+      }
+    }
+  });
+});
 
   
 //ROTA DELETE PARA APAGAR ALGUMA ESCOLA QUE ESTEJA CADASTRADA
@@ -378,6 +436,8 @@ app.delete("/api/escolas/:id", function(request, response) {
     }
   });
 });  
+
+
 
 /*   FIM DO MEU API SERVER      */
 
