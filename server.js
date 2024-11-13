@@ -311,7 +311,7 @@ app.delete("/api/criancas/:id", function(request, response) {
   });
 });
 
-//ROGA GET PARA RETORNAR TODAS AS ESCOLAS CADASTRADAS
+//ROTA GET PARA RETORNAR TODAS AS ESCOLAS CADASTRADAS
 app.get("/api/escolas", function(request, response) {
   //response.json(pessoas);
   db.all("SELECT * FROM escolas", (error, linhas) => {
@@ -320,6 +320,64 @@ app.get("/api/escolas", function(request, response) {
   })
 });
 
+//ROTA GET PARA RETORNAR UMA ÚNICA ESCOLA, PASSANDO O ID DO MESMO NA URL
+app.get("/api/escolas/:id", function(request, response) {
+  const escola_id = parseInt(request.params.id)
+  const sql = "SELECT id, inep, nome, endereco, email FROM escolas WHERE id = ?";
+  db.get(sql, [escola_id], function(error, linha) {
+    if (error) {
+      return response.status(500).send(error);    
+    } else {
+      console.log(linha);
+      if (!linha) {
+        return response.status(404).send("Pessoa não encontrada"); 
+      } else {
+        response.setHeader('content-type', 'application/json');
+        return response.send(JSON.stringify(linha));
+      }
+    }
+  });
+});
+
+//ROTA POST PARA CADASTRAR UMA ESCOLA
+app.post("/api/escolas", function(request, response) {
+ 
+  
+
+  db.run("INSERT INTO escolas (inep, nome, endereco, email) VALUES (?, ?, ?, ?) ", request.body.inep, request.body.nome, request.body.endereco, request.body.email, function(error){
+  if(error) {
+    return response.status(500).send(error);
+    } else {
+      return response.status(201).json({ id: this.lastID, inep: request.body.inep, nome: request.body.nome, endereco: request.body.endereco, email: request.body.email});
+    }
+  })
+});
+
+app.patch("/api/escolas", function(request, response) {
+  return response.status(500).send("Erro interno do servidor!");
+});
+
+//ATUALIZAR OS DADOS DA ESCOLA
+
+  
+//ROTA DELETE PARA APAGAR ALGUMA ESCOLA QUE ESTEJA CADASTRADA
+app.delete("/api/escolas/:id", function(request, response) {
+ 
+  const escola_id = parseInt(request.params.id);
+  
+  const sql = "DELETE FROM escolas WHERE id=?";
+  db.run(sql, escola_id, function(error) {
+    if(error) {
+      return response.status(500).send("Erro no servidor");
+    } else {
+      if (this.changes === 0) {
+          return response.status(404).send("Escola não encontrada.");
+      } else {
+        return response.status(204).send();
+      }
+    }
+  });
+});  
 
 /*   FIM DO MEU API SERVER      */
 
