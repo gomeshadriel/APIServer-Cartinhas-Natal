@@ -15,7 +15,7 @@ db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS pessoas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
-    cpf INTEGER NOT NULL,
+    cpf TEXT NOT NULL,
     telefone INTEGER NOT NULL,
     email TEXT NOT NULL
   )`, (err) => {
@@ -31,7 +31,7 @@ db.serialize(() => {
     nome TEXT NOT NULL,
     escola TEXT NOT NULL,
     cartinha TEXT NOT NULL,
-    imagem TEXT NOT NULL,
+    imagem TEXT,
     pessoa_id INTEGER NOT NULL,
     FOREIGN KEY (pessoa_id) REFERENCES pessoas(id)
   )`, (err) => {
@@ -42,6 +42,22 @@ db.serialize(() => {
     }
   });
 });
+  //Criando a tabela escolas
+db.run(`CREATE TABLE IF NOT EXISTS escola (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    inep TEXT NOT NULL,
+    nome TEXT NOT NULL,
+    endereco TEXT NOT NULL,
+	  email TEXT NOT NULL
+  )`, (err) => {
+    if (err) {
+      console.log("Erro ao criar a tabela escola:", err);
+    } else {
+      console.log("Tabela ESCOLA verificada/criada.");
+    }
+  });
+
+
 //Vamos tratar quando o visitante acessar o "/" (página principal)
 app.get("/", function(request, response) {
   response.sendFile(__dirname + "/index.html");
@@ -294,6 +310,16 @@ app.delete("/api/criancas/:id", function(request, response) {
     }
   });
 });
+
+//ROGA GET PARA RETORNAR TODAS AS ESCOLAS CADASTRADAS
+app.get("/api/escolas", function(request, response) {
+  //response.json(pessoas);
+  db.all("SELECT * FROM escolas", (error, linhas) => {
+    response.setHeader('content-type', 'text/json');
+    return response.send(JSON.stringify(linhas));
+  })
+});
+
 
 /*   FIM DO MEU API SERVER      */
 
