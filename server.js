@@ -43,7 +43,7 @@ db.serialize(() => {
   });
 });
   //Criando a tabela escolas
-db.run(`CREATE TABLE IF NOT EXISTS escola (
+db.run(`CREATE TABLE IF NOT EXISTS escolas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     inep TEXT NOT NULL,
     nome TEXT NOT NULL,
@@ -73,6 +73,7 @@ app.get("/api/pessoas", function(request, response) {
     return response.send(JSON.stringify(linhas));
   })
 });
+
 
 //ROTA GET para retornar uma única pessoa, passando o ID do mesmo na URL
 app.get("/api/pessoas/:id", function(request, response) {
@@ -191,25 +192,7 @@ app.delete("/api/pessoas/:id", function(request, response) {
   });
 });
 
-//ROTA POST PARA CADASTRAR UMA ESCOLA
-app.post("/api/escolas", function(request, response) {
- 
-  db.run("INSERT INTO escolas (inep, nome, endereco, email) VALUES (?, ?, ?, ?) ", request.body.inep, request.body.nome, request.body.endereco, request.body.email, function(error){
-  if(error) {
-    return response.status(500).send(error);
-    } else {
-      return response.status(201).json({ id: this.lastID, inep: request.body.inep, nome: request.body.nome, endereco: request.body.endereco, email: request.body.email});
-    }
-  })
-});
 
-app.patch("/api/escolas", function(request, response) {
-  return response.status(500).send("Erro interno do servidor!");
-});
-
-//ATUALIZAR OS DADOS DA ESCOLA
-app.patch("/api/escola/:id", function(request, response) {
-  const escola_id = parseInt(request.params.id);
 
 //ROTA GET PARA RETORNAR AS CRIANÇAS
 app.get("/api/criancas", function(request, response) {
@@ -363,7 +346,7 @@ app.get("/api/escolas/:id", function(request, response) {
 //ROTA POST PARA CADASTRAR UMA ESCOLA
 app.post("/api/escolas", function(request, response) {
  
-  db.run("INSERT INTO escolas (inep, nome, endereco, email) VALUES (?, ?, ?, ?) ", request.body.inep, request.body.nome, request.body.endereco, request.body.email, function(error){
+  db.run("INSERT INTO escola (inep, nome, endereco, email) VALUES (?, ?, ?, ?) ", request.body.inep, request.body.nome, request.body.endereco, request.body.email, function(error){
   if(error) {
     return response.status(500).send(error);
     } else {
