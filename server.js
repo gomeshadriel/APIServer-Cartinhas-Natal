@@ -32,7 +32,7 @@ db.serialize(() => {
     escola TEXT NOT NULL,
     cartinha TEXT NOT NULL,
     imagem TEXT,
-    pessoa_id INTEGER NOT NULL,
+    pessoa_id INTEGER,
     FOREIGN KEY (pessoa_id) REFERENCES pessoas(id)
   )`, (err) => {
     if (err) {
