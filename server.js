@@ -346,7 +346,7 @@ app.get("/api/escolas/:id", function(request, response) {
 //ROTA POST PARA CADASTRAR UMA ESCOLA
 app.post("/api/escolas", function(request, response) {
  
-  db.run("INSERT INTO escola (inep, nome, endereco, email) VALUES (?, ?, ?, ?) ", request.body.inep, request.body.nome, request.body.endereco, request.body.email, function(error){
+  db.run("INSERT INTO escolas (inep, nome, endereco, email) VALUES (?, ?, ?, ?) ", request.body.inep, request.body.nome, request.body.endereco, request.body.email, function(error){
   if(error) {
     return response.status(500).send(error);
     } else {
@@ -415,6 +415,17 @@ app.patch("/api/escola/:id", function(request, response) {
       } else {
         return response.status(200).send();
       }
+    }
+  });
+});
+
+//
+app.delete("/api/tabela", function (request, response) {
+  db.run("DROP TABLE IF EXISTS escola", function (error) {
+    if (error) {
+      return response.status(500).send(error);
+    } else {
+      return response.status(200).send("Tabela deletada com sucesso!");
     }
   });
 });
