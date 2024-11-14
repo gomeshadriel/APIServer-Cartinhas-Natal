@@ -190,6 +190,27 @@ app.delete("/api/pessoas/:id", function(request, response) {
     }
   });
 });
+
+//ROTA POST PARA CADASTRAR UMA ESCOLA
+app.post("/api/escolas", function(request, response) {
+ 
+  db.run("INSERT INTO escolas (inep, nome, endereco, email) VALUES (?, ?, ?, ?) ", request.body.inep, request.body.nome, request.body.endereco, request.body.email, function(error){
+  if(error) {
+    return response.status(500).send(error);
+    } else {
+      return response.status(201).json({ id: this.lastID, inep: request.body.inep, nome: request.body.nome, endereco: request.body.endereco, email: request.body.email});
+    }
+  })
+});
+
+app.patch("/api/escolas", function(request, response) {
+  return response.status(500).send("Erro interno do servidor!");
+});
+
+//ATUALIZAR OS DADOS DA ESCOLA
+app.patch("/api/escola/:id", function(request, response) {
+  const escola_id = parseInt(request.params.id);
+
 //ROTA GET PARA RETORNAR AS CRIANÇAS
 app.get("/api/criancas", function(request, response) {
   //response.json(pessoas);
