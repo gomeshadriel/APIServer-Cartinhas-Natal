@@ -1,13 +1,22 @@
 //Criar o app, express...
 const express = require("express");
 const app = express();
+const cors = require('cors');''
 const fs = require("fs");
+
+app.use(cors({ origin: 'http://localhost:3000' })); // Exemplo de origem permitida
+
+app.get('/api', (req, res) => {
+    res.json({ message: 'CORS habilitado!' });
+});
 
 //Inicialização do banco de dados SQLite
 const dbFile = "./.data/pessoas.db";
 const exists = fs.existsSync(dbFile);
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database(dbFile);
+
+
 
 //Se o banco não existir, crie ele primeiro
 db.serialize(() => {
@@ -454,6 +463,8 @@ app.delete("/api/escolas/:id", function(request, response) {
 
 
 //"Listener"
-const listener = app.listen(process.env.PORT, function() {
-console.log("Your app is listening on port "+ listener.address().port);
+const PORT = 4000;
+
+const listener = app.listen(PORT, function() {
+    console.log("Your app is listening on port " + PORT);
 });
